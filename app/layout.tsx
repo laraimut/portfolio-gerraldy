@@ -47,7 +47,7 @@ export default async function RootLayout({
         {/* SIDEBAR */}
         <aside className="w-[300px] h-screen sticky top-0 flex flex-col items-center py-16 overflow-y-auto shrink-0 bg-white">
           
-          <Link href="/" className="font-[800] text-[28px] text-center leading-[1.1] tracking-wide mb-16 uppercase text-black">
+          <Link href="/about" className="font-[800] text-[28px] text-center leading-[1.1] tracking-wide mb-16 uppercase text-black">
             GERRALDY<br />PARIKESIT
           </Link>
 
