@@ -1,114 +1,48 @@
-import type { Metadata } from 'next';
-import { Jost } from 'next/font/google';
-import './globals.css';
+import Image from 'next/image';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase'; // Memanggil jembatan Supabase
 
-const jost = Jost({ 
-  subsets: ['latin'],
-  weight: ['300', '400', '700', '800']
-});
-
-export const metadata: Metadata = {
-  title: 'Gerraldy Parikesit',
-  description: 'Film director and photographer portfolio.',
-};
-
-// Fungsi dinamis mengambil data dari Supabase
-async function getShortFilmsMenu() {
-  const { data } = await supabase
-    .from('short_films')
-    .select('title, slug')
-    .order('created_at', { ascending: true }); // Mengurutkan dari yang terlama ke terbaru (atau ganti false)
-  return data || [];
-}
-
-async function getMusicVideosMenu() {
-  const { data } = await supabase
-    .from('music_videos')
-    .select('title, slug')
-    .order('created_at', { ascending: true });
-  return data || [];
-}
-
-export default async function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  // Menjalankan pengambilan data
-  const shortFilms = await getShortFilmsMenu();
-  const musicVideos = await getMusicVideosMenu();
-
+export default function AboutPage() {
   return (
-    <html lang="en">
-      <body className={`${jost.className} bg-white text-black antialiased flex min-h-screen`}>
-        
-        {/* SIDEBAR */}
-        <aside className="w-[300px] h-screen sticky top-0 flex flex-col items-center py-16 overflow-y-auto shrink-0 bg-white">
-          
-          <Link href="/about" className="font-[800] text-[28px] text-center leading-[1.1] tracking-wide mb-16 uppercase text-black">
-            GERRALDY<br />PARIKESIT
-          </Link>
+    <div className="max-w-6xl mx-auto pt-20 pb-16 px-10 min-h-screen flex flex-col items-center bg-white text-black">
+      
+      {/* 1. Judul ABOUT */}
+      <h1 className="text-[40px] font-[300] tracking-[0.15em] mb-12">
+        ABOUT
+      </h1>
 
-          <nav className="flex flex-col items-center text-center w-full text-black">
-            
-            <Link href="/about" className="font-bold mb-6 text-[15px] hover:text-gray-400 transition-colors">About</Link>
-            <Link href="/contact" className="font-bold mb-12 text-[15px] hover:text-gray-400 transition-colors">Contact</Link>
+      {/* 2. Satu Foto Besar (Tengah) */}
+      <div className="flex justify-center w-full mb-20">
+        <div className="w-[380px] h-[550px] relative bg-gray-100 overflow-hidden shadow-sm">
+          <Image
+            src="https://vpksinruqmdyarwjcxzl.supabase.co/storage/v1/object/public/portfolio/about/POST%20GERRALDY%201.jpg"
+            alt="Portrait of Gerraldy Parikesit"
+            fill
+            className="object-cover grayscale hover:grayscale-0 transition duration-700"
+            priority // Prioritas untuk load karena ini gambar utama
+          />
+        </div>
+      </div>
 
-            {/* Short Film Submenu (Dinamis dari Supabase) */}
-            <h2 className="font-bold uppercase tracking-wider text-[15px] mb-5">
-              <Link href="/short-films" className="hover:text-gray-400 transition-colors">SHORT FILM</Link>
-            </h2>
-            <div className="flex flex-col gap-3 mb-12">
-              {shortFilms.length > 0 ? (
-                shortFilms.map((film) => (
-                  <Link 
-                    key={film.slug} 
-                    href={`/short-film/${film.slug}`} 
-                    className="font-[300] text-[16px] hover:text-gray-400 transition-colors"
-                  >
-                    {film.title}
-                  </Link>
-                ))
-              ) : (
-                <span className="text-gray-300 text-sm font-light">Belum ada film</span>
-              )}
-            </div>
+      {/* 3. Teks Biografi (Sama persis dengan jarak baris premium) */}
+      <div className="max-w-4xl mx-auto mb-20">
+        <p className="text-center text-[17px] font-[300] leading-[2.2] text-[#111111]">
+          Gerraldy Parikesit is a filmmaker and visual storyteller whose work spans narrative films, music videos, and photography. 
+          A Film graduate from BINUS University, his films have been screened at festivals such as the 100% Manusia Film Festival. 
+          Drawn to cinema as an emotional medium, he approaches filmmaking with a focus on feeling, atmosphere, and visual language, 
+          while also maintaining a strong interest in photography and visual art more broadly. 
+          A Fan of art in many forms, he explores different mediums with curiosity as part of developing his voice. 
+          He also has experience working in art department in short films and commercial. 
+          He previously interned at Europe on Screen 2024, and to date has directed four short films and one music video.
+        </p>
+      </div>
 
-            {/* Music Videos Submenu (Dinamis dari Supabase) */}
-            <h2 className="font-bold uppercase tracking-wider text-[15px] mb-5">
-              <Link href="/music-videos" className="hover:text-gray-400 transition-colors">MUSIC VIDEOS</Link>
-            </h2>
-            <div className="flex flex-col gap-3 mb-12">
-              {musicVideos.length > 0 ? (
-                musicVideos.map((mv) => (
-                  <Link 
-                    key={mv.slug} 
-                    href={`/music-videos/${mv.slug}`} 
-                    className="font-[300] text-[16px] hover:text-gray-400 transition-colors"
-                  >
-                    {mv.title}
-                  </Link>
-                ))
-              ) : (
-                <span className="text-gray-300 text-sm font-light">Belum ada video</span>
-              )}
-            </div>
+      {/* 4. Tombol Back to Top */}
+      <div className="mt-auto text-center">
+        <Link href="#top" className="text-[#999999] font-[300] hover:text-black transition-colors flex items-center justify-center gap-2 text-[15px]">
+          <span>↑</span> Back to Top
+        </Link>
+      </div>
 
-            <Link href="/photography" className="font-bold uppercase tracking-wider text-[15px] hover:text-gray-400 transition-colors">
-              PHOTOGRAPHY
-            </Link>
-
-          </nav>
-        </aside>
-
-        {/* AREA KONTEN UTAMA */}
-        <main id="top" className="flex-1 overflow-y-auto relative bg-white">
-          {children}
-        </main>
-
-      </body>
-    </html>
+    </div>
   );
 }
